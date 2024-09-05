@@ -18,10 +18,10 @@ class LoginScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              // Add the illustration image
+              // Add the transparent image (e.g., yoga pose) at the top
               Image.asset(
-                'assets/illustration.png', // Add your illustration here
-                height: 200,
+                'assets/images/yoga.png', // Add your image with transparent background here
+                height: 150, // Adjust height based on your design
               ),
               SizedBox(height: 40),
               Text(
@@ -76,7 +76,8 @@ class LoginScreen extends StatelessWidget {
                   Navigator.pushReplacementNamed(context, '/home');
                 },
                 style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 80.0), backgroundColor: Colors.deepPurpleAccent,
+                  padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 80.0),
+                  backgroundColor: Colors.deepPurpleAccent,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30.0),
                   ),
@@ -103,4 +104,11 @@ class LoginScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+void main() {
+  runApp(MaterialApp(
+    home: LoginScreen(),
+    debugShowCheckedModeBanner: false,
+  ));
 }

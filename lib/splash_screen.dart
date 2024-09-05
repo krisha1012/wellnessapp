@@ -24,7 +24,7 @@ class _SplashScreenState extends State<SplashScreen> {
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color(0xFFAAD3E0), Color(0xFFffffff)], // Gradient from #AAD3E0 to white
+            colors: [Color(0xFFfbc2eb), Color(0xFFa18cd1)], // Gradient from #AAD3E0 to white
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
@@ -36,7 +36,7 @@ class _SplashScreenState extends State<SplashScreen> {
               Image.asset('assets/logo.png', height: 120), // Your app logo
               SizedBox(height: 20),
               Text(
-                'Welcome to Your App',
+                'ZenFit',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 20),
