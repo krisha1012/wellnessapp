@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class RegisterScreen extends StatefulWidget {
   @override
@@ -9,6 +11,44 @@ class _RegisterScreenState extends State<RegisterScreen> {
   String? _selectedGender;
   final List<String> _genders = ['Male', 'Female', 'Prefer Not to say', 'Other'];
 
+  TextEditingController nameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
+  TextEditingController ageController = TextEditingController();
+  TextEditingController mobileNumberController = TextEditingController();
+
+  Future<void> registerUser() async {
+    if (passwordController.text != confirmPasswordController.text) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Passwords do not match')),
+      );
+      return;
+    }
+
+    var url = Uri.parse('http://localhost:5000/api/register');
+    var response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'name': nameController.text,
+        'email': emailController.text,
+        'password': passwordController.text,
+        'age': int.parse(ageController.text),
+        'gender': _selectedGender,
+        'mobileNumber': mobileNumberController.text,
+      }),
+    );
+
+    if (response.statusCode == 201) {
+      Navigator.pushReplacementNamed(context, '/home');
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error registering user')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,7 +57,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Color(0xFFfbc2eb), Color(0xFFa18cd1)], // Background gradient
+            colors: [Color(0xFFfbc2eb), Color(0xFFa18cd1)],
           ),
         ),
         child: Padding(
@@ -26,10 +66,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                // Add the transparent image (e.g., calming brain)
                 Image.asset(
-                  'assets/images/calmingbrain.png', // Replace with your transparent image
-                  height: 150, // Adjust the height as per your design
+                  'assets/images/calmingbrain.png',
+                  height: 150,
                 ),
                 SizedBox(height: 40),
                 Text(
@@ -49,8 +88,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
                 SizedBox(height: 40),
-                // Name TextField
                 TextField(
+                  controller: nameController,
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: Colors.white,
@@ -63,8 +102,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
                 SizedBox(height: 20),
-                // Email TextField
                 TextField(
+                  controller: emailController,
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: Colors.white,
@@ -77,9 +116,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
                 SizedBox(height: 20),
-                // Password TextField
                 TextField(
                   obscureText: true,
+                  controller: passwordController,
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: Colors.white,
@@ -92,9 +131,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
                 SizedBox(height: 20),
-                // Confirm Password TextField
                 TextField(
                   obscureText: true,
+                  controller: confirmPasswordController,
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: Colors.white,
@@ -107,8 +146,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
                 SizedBox(height: 20),
-                // Age TextField
                 TextField(
+                  controller: ageController,
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     filled: true,
@@ -122,7 +161,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
                 SizedBox(height: 20),
-                // Gender Dropdown
                 DropdownButtonFormField<String>(
                   value: _selectedGender,
                   hint: Text('Select Gender'),
@@ -148,8 +186,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
                 SizedBox(height: 20),
-                // Mobile Number TextField
                 TextField(
+                  controller: mobileNumberController,
                   keyboardType: TextInputType.phone,
                   decoration: InputDecoration(
                     filled: true,
@@ -163,11 +201,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
                 SizedBox(height: 30),
-                // Sign Up Button
                 ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushReplacementNamed(context, '/home');
-                  },
+                  onPressed: registerUser,
                   style: ElevatedButton.styleFrom(
                     padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 80.0),
                     backgroundColor: Colors.deepPurpleAccent,
@@ -181,7 +216,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
                 SizedBox(height: 20),
-                // 'Or' Text
                 Text(
                   'Or',
                   style: TextStyle(
@@ -190,7 +224,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
                 SizedBox(height: 20),
-                // Go to Login Button
                 TextButton(
                   onPressed: () {
                     Navigator.pushReplacementNamed(context, '/login');

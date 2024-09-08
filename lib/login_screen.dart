@@ -1,7 +1,49 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  String? _errorMessage;
+
+  Future<void> _login() async {
+    final String email = _emailController.text;
+    final String password = _passwordController.text;
+
+    try {
+      final response = await http.post(
+        Uri.parse('http://localhost:5000/api/login'), // Adjust to your backend URL
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'email': email,
+          'password': password,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        // Login successful, navigate to home screen
+        Navigator.pushReplacementNamed(context, '/home');
+      } else {
+        final responseData = jsonDecode(response.body);
+        setState(() {
+          _errorMessage = responseData['error'] ?? 'Login failed';
+        });
+      }
+    } catch (error) {
+      setState(() {
+        _errorMessage = 'Error connecting to the server';
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,10 +60,9 @@ class LoginScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              // Add the transparent image (e.g., yoga pose) at the top
               Image.asset(
-                'assets/images/yoga.png', // Add your image with transparent background here
-                height: 150, // Adjust height based on your design
+                'assets/images/yoga.png',
+                height: 150,
               ),
               SizedBox(height: 40),
               Text(
@@ -43,6 +84,7 @@ class LoginScreen extends StatelessWidget {
               SizedBox(height: 40),
               // Email TextField
               TextField(
+                controller: _emailController,
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: Colors.white,
@@ -57,6 +99,7 @@ class LoginScreen extends StatelessWidget {
               SizedBox(height: 20),
               // Password TextField
               TextField(
+                controller: _passwordController,
                 obscureText: true,
                 decoration: InputDecoration(
                   filled: true,
@@ -70,11 +113,16 @@ class LoginScreen extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 30),
+              if (_errorMessage != null) ...[
+                Text(
+                  _errorMessage!,
+                  style: TextStyle(color: Colors.red),
+                ),
+                SizedBox(height: 20),
+              ],
               // Continue Button
               ElevatedButton(
-                onPressed: () {
-                  Navigator.pushReplacementNamed(context, '/home');
-                },
+                onPressed: _login,
                 style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 80.0),
                   backgroundColor: Colors.deepPurpleAccent,
@@ -91,7 +139,7 @@ class LoginScreen extends StatelessWidget {
               // Create an Account Button
               TextButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, '/signUp'); // Assume you have a signup route
+                  Navigator.pushNamed(context, '/signUp');
                 },
                 child: Text(
                   'Or Create an Account',
