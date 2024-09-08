@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'splash_screen.dart'; // Importing the splash screen
 import 'login_screen.dart'; // Importing the login screen
 import 'registeration_page.dart'; // Importing the registration screen
+import 'features.dart'; //Importing the features screen
 
 void main() {
   runApp(MyApp());
@@ -22,6 +23,7 @@ class MyApp extends StatelessWidget {
         '/login': (context) => LoginScreen(),
         '/signUp': (context) => RegisterScreen(), // Registration page route
         '/home': (context) => HomePage(),
+        '/features': (context) => Features(),
       },
     );
   }

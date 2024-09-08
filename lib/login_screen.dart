@@ -30,7 +30,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (response.statusCode == 200) {
         // Login successful, navigate to home screen
-        Navigator.pushReplacementNamed(context, '/home');
+        Navigator.pushReplacementNamed(context, '/features');
       } else {
         final responseData = jsonDecode(response.body);
         setState(() {
