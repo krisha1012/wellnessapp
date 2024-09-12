@@ -29,8 +29,15 @@ class _LoginScreenState extends State<LoginScreen> {
       );
 
       if (response.statusCode == 200) {
-        // Login successful, navigate to home screen
-        Navigator.pushReplacementNamed(context, '/features');
+        final responseData = jsonDecode(response.body);
+        final String userId = responseData['userId'];
+
+        // Login successful, navigate to the next page and pass userId
+        Navigator.pushReplacementNamed(
+          context,
+          '/features',
+          arguments: userId,
+        );
       } else {
         final responseData = jsonDecode(response.body);
         setState(() {
@@ -82,7 +89,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               SizedBox(height: 40),
-              // Email TextField
               TextField(
                 controller: _emailController,
                 decoration: InputDecoration(
@@ -97,7 +103,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               SizedBox(height: 20),
-              // Password TextField
               TextField(
                 controller: _passwordController,
                 obscureText: true,
@@ -120,7 +125,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 SizedBox(height: 20),
               ],
-              // Continue Button
               ElevatedButton(
                 onPressed: _login,
                 style: ElevatedButton.styleFrom(
@@ -136,7 +140,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               SizedBox(height: 20),
-              // Create an Account Button
               TextButton(
                 onPressed: () {
                   Navigator.pushNamed(context, '/signUp');
@@ -152,11 +155,4 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
-}
-
-void main() {
-  runApp(MaterialApp(
-    home: LoginScreen(),
-    debugShowCheckedModeBanner: false,
-  ));
 }
